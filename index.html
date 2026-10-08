@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="color-scheme" content="light">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="国際小包料金">
+<meta name="theme-color" content="#d9652b">
+<link rel="apple-touch-icon" sizes="180x180" id="appleIcon" href="">
+<link rel="icon" type="image/png" id="favIcon" href="">
+<title>国際小包料金表</title>
+<style>
+:root{
+  --navy:#1f3a5f; --navy2:#2d4f7c; --bg:#f3f5f9; --card:#fff; --text:#1b2433; --sub:#5d6b80;
+  --line:#d6dce6; --grid:#3a3a3a; --hl:#fff3c4; --hlLine:#e0b300; --red:#c62828; --chip:#e8edf5;
+  --ems:#e8743b; --air:#3a7bd5; --sea:#5a9e3a;
+}
+body.m-ems{--navy:#d9652b;--navy2:#b84d17;--tint:#ffe9e1;--colsel:#fff6cf;--chip:#fbe9df}
+body.m-air{--navy:#2f7fd0;--navy2:#1d62ad;--tint:#dff2ff;--colsel:#fff6cf;--chip:#e3eef9}
+body.m-sea{--navy:#4e9a2f;--navy2:#3a7d1f;--tint:#e7f8dc;--colsel:#fff6cf;--chip:#e5f2dc}
+body{transition:background .2s}
+td:first-child{background:var(--tint)}
+.seg{background:#e8edf5}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;background:var(--bg);color:var(--text);
+  padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+header{position:sticky;top:0;z-index:10;background:var(--bg);padding:12px 12px 8px;border-bottom:1px solid var(--line)}
+h1{margin:0 0 10px;font-size:18px;color:var(--navy);display:flex;align-items:center;gap:6px}
+h1 small{font-size:11px;color:var(--sub);font-weight:normal;margin-left:auto}
+.mute{border:1px solid var(--line);background:#fff;border-radius:8px;font-size:16px;padding:2px 6px;line-height:1.2}
+.seg{display:flex;background:var(--chip);border-radius:10px;padding:3px;gap:3px}
+.seg button{flex:1;border:0;background:transparent;padding:9px 0;border-radius:8px;font-size:15px;font-weight:700;color:var(--sub)}
+.seg button.on{background:var(--card);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.seg button.on[data-k=ems]{color:var(--ems)} .seg button.on[data-k=air]{color:var(--air)} .seg button.on[data-k=sea]{color:var(--sea)}
+.seg{background:#eef1f5!important}
+.seg button[data-k=ems]{background:#fde6da;color:#d9652b}
+.seg button[data-k=air]{background:#dcecfb;color:#2f7fd0}
+.seg button[data-k=sea]{background:#e2f3d8;color:#4e9a2f}
+.seg button.on[data-k=ems]{background:#e8743b;color:#fff}
+.seg button.on[data-k=air]{background:#3a86d6;color:#fff}
+.seg button.on[data-k=sea]{background:#5aa53a;color:#fff}
+input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+input[type=number]{-moz-appearance:textfield}
+.calc button.clr{background:#fff;color:#444;border:1.5px solid #999}
+.calc{display:flex;gap:6px;margin-top:10px;align-items:center;flex-wrap:nowrap}
+.inwrap{position:relative;flex:1;min-width:0}
+.calc input{width:100%;min-width:0;font-size:17px;padding:9px 26px 9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--text)}
+.calc .unit{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--sub);pointer-events:none}
+.calc button{flex:0 0 auto;border:0;background:var(--navy);color:#fff;padding:10px 11px;border-radius:8px;font-size:14px;font-weight:700;white-space:nowrap;height:42px}
+.calc button.mic{width:42px;padding:0;display:flex;align-items:center;justify-content:center;background:#fff;color:var(--navy);border:1.5px solid var(--navy)}
+.calc button.mic.on{background:var(--navy);color:#fff}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(229,57,53,.6)}100%{box-shadow:0 0 0 10px rgba(229,57,53,0)}}
+.vrow{display:none;align-items:center;gap:8px;margin-top:6px}
+.vrow.show{display:flex}
+.vmsg{flex:1;min-width:0;font-size:11px;color:var(--sub)}
+.result{margin:8px 0 0;background:var(--card);border:2px solid var(--navy2);border-radius:12px;padding:6px 8px 8px;display:none}
+.result .w{font-size:15px;color:#333}
+.result .grid{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-top:6px}
+.result .grid button{text-align:center;padding:4px 1px;min-width:0;border-radius:8px;background:var(--chip);border:1.5px solid var(--navy);color:var(--text);font:inherit;cursor:pointer}
+.result .grid button:active{transform:scale(.96)}
+.result .grid button.sel{background:var(--navy);color:#fff}
+.result .zsel{margin-top:4px;display:grid;grid-template-columns:1fr auto;align-items:center;column-gap:8px;line-height:1.25}
+.result .zsel .zn2{font-size:17px;font-weight:500;color:var(--navy2);white-space:nowrap}
+.result .zsel big{font-size:32px;font-weight:500;color:#000;white-space:nowrap;letter-spacing:-.5px;line-height:1.1}
+.result .zsel big small{font-size:18px;margin-left:1px}
+.result .zsel .zd{grid-column:1 / -1;font-size:min(14px,3.4vw);font-weight:400;color:#222;margin-top:2px;line-height:1.35;white-space:nowrap;letter-spacing:-.3px;overflow:hidden;text-overflow:clip}
+.result .hint{margin-top:4px;font-weight:700;text-align:center;font-size:11px;color:var(--sub)}
+.result .grid b{display:block;font-size:14px;margin-top:1px;letter-spacing:-.2px}
+.result .grid span{display:block;font-size:10px;line-height:1.25;white-space:nowrap;overflow:hidden}
+.result .grid span.zn{font-weight:700;opacity:.75}
+.result .msg{color:var(--red);font-size:13px}
+main{padding:10px 12px 30px}
+table{width:100%;border-collapse:separate;border-spacing:0;background:var(--card);border:1.5px solid var(--grid);font-variant-numeric:tabular-nums}
+td{color:#000}
+th,td{padding:8px 4px;text-align:right;border-bottom:1px solid var(--grid);border-right:1px solid var(--grid);font-size:14px}
+th{position:sticky;top:var(--hdr,0px);z-index:5;background:var(--navy);color:#fff;font-size:11px;text-align:center;font-weight:600;line-height:1.25}
+td:first-child{text-align:center;font-weight:700;color:#000;white-space:nowrap;font-size:13px}
+td.r{color:var(--red)}
+td.colsel{background:var(--colsel)}
+th.zb{cursor:pointer;padding:5px 2px}
+th.zb span{display:block;border:1.5px solid rgba(255,255,255,.75);border-radius:7px;padding:4px 1px;background:rgba(255,255,255,.12)}
+th.zb:active span{transform:scale(.95)}
+th.colsel span{background:#ffe27a;color:#000;border-color:#ffe27a;font-weight:700}
+tr.hl td{background:var(--hl)!important}
+tr.hl td.colsel{background:#ffe27a!important;font-weight:700}
+tr.hl td:first-child{box-shadow:inset 4px 0 0 var(--hlLine)}
+tbody tr:last-child td{border-bottom:0}
+th:last-child,td:last-child{border-right:0}
+.note{font-size:11px;color:var(--sub);margin-top:10px;line-height:1.6}
+.note .r{color:var(--red)}
+.legend{margin-top:12px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--text)}
+.legend b{display:block;color:var(--navy);margin-bottom:6px}
+.legend div{padding:4px 0;border-top:1px dashed var(--line)}
+.legend i{font-style:normal;display:inline-block;background:var(--navy);color:#fff;border-radius:4px;padding:1px 6px;margin-right:8px;font-size:11px}
+/* === Claude Code のキャラクター（ヘッダー左上） === */
+.cc-wrap { width: 62px; height: 40px; flex-shrink: 0; display: flex; justify-content: center; margin-left: -8px; }
+.cc-mascot { display: flex; flex-direction: column; align-items: center; gap: 3px; text-decoration: none; padding-top: 4px; }
+.cc-mascot svg { width: 36px; height: 27px; shape-rendering: crispEdges; overflow: visible; transform-origin: center; }
+.cc-mascot .cc-label { font-family: -apple-system, "Segoe UI", sans-serif; font-size: 7px; letter-spacing: 0.05em; color: #d97757; opacity: 0.8; white-space: nowrap; font-weight: normal; }
+.cc-body { fill: #d97757; }
+.cc-eye { fill: #1a1612; transform-box: fill-box; transform-origin: center; }
+.cc-eye { animation: cc-blink 4s infinite; }
+@keyframes cc-blink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
+</style>
+</head>
+<body class="m-ems">
+<header>
+  <h1><div class="cc-wrap">
+    <a class="cc-mascot" href="https://claude.com/claude-code" target="_blank" rel="noopener" title="Claude Code で作成" aria-label="Claude Code で作成">
+      <svg viewBox="0 -1 12 9" aria-hidden="true">
+        <rect class="cc-body cc-leg" x="2" y="6" width="1" height="2"/>
+        <rect class="cc-body cc-leg" x="4" y="6" width="1" height="2"/>
+        <rect class="cc-body cc-leg" x="7" y="6" width="1" height="2"/>
+        <rect class="cc-body cc-leg" x="9" y="6" width="1" height="2"/>
+        <g class="cc-hop">
+          <rect class="cc-body" x="2" y="0" width="8" height="6"/>
+          <rect class="cc-body cc-arm-l" x="0" y="2" width="2" height="2"/>
+          <rect class="cc-body cc-arm-r" x="10" y="2" width="2" height="2"/>
+          <rect class="cc-eye" x="3" y="1" width="1" height="1"/>
+          <rect class="cc-eye" x="8" y="1" width="1" height="1"/>
+        </g>
+      </svg>
+      <span class="cc-label">Claude Code</span>
+    </a>
+  </div><span id="ico">⚡</span> 国際小包料金表 <small>日本郵便</small><button id="mute" class="mute" aria-label="音">🔊</button></h1>
+  <div class="seg" id="seg">
+    <button data-k="ems" class="on">EMS</button>
+    <button data-k="air">航空便</button>
+    <button data-k="sea">船便</button>
+  </div>
+  <div class="calc">
+    <div class="inwrap"><input id="wt" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="重さを入力"><span class="unit" id="unit">g</span></div>
+    <button id="mic" class="mic" aria-label="音声入力"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11h-2z"/></svg></button>
+    <button id="go">検索</button>
+    <button id="clr" class="clr">クリア</button>
+  </div>
+  <div class="vrow" id="vrow"><div class="vmsg" id="vmsg"></div></div>
+<div class="result" id="result"></div>
+</header>
+<main>
+  <table><thead id="thead"></thead><tbody id="tbody"></tbody></table>
+  <div class="note" id="note"></div>
+</main>
+<script>
+const ZONES=["第1 中韓台","第2 アジア","第3 豪カメ欧","第4 米国","第5 南米アフ"];
+const ZSHORT=["中韓台","アジア","豪カメ欧","米国","南米アフ"];
+// 各行: [重さ, 第1, 第2, 第3, 第4, 第5]
+const DATA={
+ ems:{unit:"g",label:w=>w<1000?w+"g":(w/1000)+"kg",red:[],rows:[
+  [500,1450,1900,3150,3900,3600],[600,1600,2150,3400,4180,3900],[700,1750,2400,3650,4460,4200],
+  [800,1900,2650,3900,4740,4500],[900,2050,2900,4150,5020,4800],[1000,2200,3150,4400,5300,5100],
+  [1250,2500,3500,5000,5990,5850],[1500,2800,3850,5550,6600,6600],[1750,3100,4200,6150,7290,7350],
+  [2000,3400,4550,6700,7900,8100],[2500,3900,5150,7750,9100,9600],[3000,4400,5750,8800,10300,11100],
+  [3500,4900,6350,9850,11500,12600],[4000,5400,6950,10900,12700,14100],[4500,5900,7550,11950,13900,15600],
+  [5000,6400,8150,13000,15100,17100],[5500,6900,8750,14050,16300,18600],[6000,7400,9350,15100,17500,20100],
+  [7000,8200,10350,17200,19900,22500],[8000,9000,11350,19300,22300,24900],[9000,9800,12350,21400,24700,27300],
+  [10000,10600,13350,23500,27100,29700],[11000,11400,14350,25600,29500,32100],[12000,12200,15350,27700,31900,34500],
+  [13000,13000,16350,29800,34300,36900],[14000,13800,17350,31900,36700,39300],[15000,14600,18350,34000,39100,41700],
+  [16000,15400,19350,36100,41500,44100],[17000,16200,20350,38200,43900,46500],[18000,17000,21350,40300,46300,48900],
+  [19000,17800,22350,42400,48700,51300],[20000,18600,23350,44500,51100,53700],[21000,19400,24350,46600,53500,56100],
+  [22000,20200,25350,48700,55900,58500],[23000,21000,26350,50800,58300,60900],[24000,21800,27350,52900,60700,63300],
+  [25000,22600,28350,55000,63100,65700],[26000,23400,29350,57100,65500,68100],[27000,24200,30350,59200,67900,70500],
+  [28000,25000,31350,61300,70300,72900],[29000,25800,32350,63400,72700,75300],[30000,26600,33350,65500,75100,77700]
+ ]},
+ air:{unit:"kg",label:w=>w+"kg",red:[],rows:[
+  [1,2050,2500,3850,4200,4550],[2,2750,3700,6000,6700,7250],[3,3450,4900,8150,9200,9950],
+  [4,4150,6100,10300,11700,12650],[5,4850,7300,12450,14200,15350],[6,5550,8500,14600,16700,18050],
+  [7,6250,9700,16750,19200,20750],[8,6950,10900,18900,21700,23450],[9,7650,12100,21050,24200,26150],
+  [10,8350,13300,23200,26700,28850],[11,8850,13950,24800,28700,30650],[12,9350,14600,26400,30700,32450],
+  [13,9850,15250,28000,32700,34250],[14,10350,15900,29600,34700,36050],[15,10850,16550,31200,36700,37850],
+  [16,11350,17200,32800,38700,39650],[17,11850,17850,34400,40700,41450],[18,12350,18500,36000,42700,43250],
+  [19,12850,19150,37600,44700,45050],[20,13350,19800,39200,46700,46850],[21,13850,20450,40800,48700,48650],
+  [22,14350,21100,42400,50700,50450],[23,14850,21750,44000,52700,52250],[24,15350,22400,45600,54700,54050],
+  [25,15850,23050,47200,56700,55850],[26,16350,23700,48800,58700,57650],[27,16850,24350,50400,60700,59450],
+  [28,17350,25000,52000,62700,61250],[29,17850,25650,53600,64700,63050],[30,18350,26300,55200,66700,64850]
+ ]},
+ sea:{unit:"kg",label:w=>w+"kg",red:[],rows:[
+  [1,1800,2100,2500,2600,2700],[2,2200,2600,3100,3300,3400],[3,2600,3100,3700,4000,4100],
+  [4,3000,3600,4300,4700,4800],[5,3400,4100,4900,5400,5500],[6,3800,4600,5500,6100,6200],
+  [7,4200,5100,6100,6800,6900],[8,4600,5600,6700,7500,7600],[9,5000,6100,7300,8200,8300],
+  [10,5400,6600,7900,8900,9000],[11,5800,7000,8300,9500,9600],[12,6200,7400,8700,10100,10200],
+  [13,6600,7800,9100,10700,10800],[14,7000,8200,9500,11300,11400],[15,7400,8600,9900,11900,12000],
+  [16,7800,9000,10300,12500,12600],[17,8200,9400,10700,13100,13200],[18,8600,9800,11100,13700,13800],
+  [19,9000,10200,11500,14300,14400],[20,9400,10600,11900,14900,15000],[21,9800,11000,12300,15500,15600],
+  [22,10200,11400,12700,16100,16200],[23,10600,11800,13100,16700,16800],[24,11000,12200,13500,17300,17400],
+  [25,11400,12600,13900,17900,18000],[26,11800,13000,14300,18500,18600],[27,12200,13400,14700,19100,19200],
+  [28,12600,13800,15100,19700,19800],[29,13000,14200,15500,20300,20400],[30,13400,14600,15900,20900,21000]
+ ]}
+};
+const LEGEND='<div class="legend"><b>地帯の内訳</b>'+
+ '<div><i>第1</i>中国・韓国・台湾</div>'+
+ '<div><i>第2</i>アジア（中国・韓国・台湾を除く）</div>'+
+ '<div><i>第3</i>オセアニア・カナダ・メキシコ・中近東・ヨーロッパ</div>'+
+ '<div><i>第4</i>米国（グアム等海外領土含む）</div>'+
+ '<div><i>第5</i>中南米（メキシコを除く）・アフリカ</div></div>';
+const NOTES={
+ ems:'第3・第4地帯は<b>特別追加料金を含む</b>金額です。<br>グラムで入力できます。重さは「〜まで」の区分。例：1,100g → 1.25kgまでの料金。30kgまで。'+LEGEND,
+ air:'第3・第4地帯は特別追加料金を含む金額です。<br>グラムで入力できます。1kg単位で切り上げ（例：1,200g → 2kgまで）。30kgまで。'+LEGEND,
+ sea:'グラムで入力できます。1kg単位で切り上げ（例：1,200g → 2kgまで）。30kgまで。'+LEGEND
+};
+let AC=null, muted=false;
+try{ muted=localStorage.getItem("intl_mute")==="1"; }catch(e){}
+function tone(f,t0,dur,vol){
+  const o=AC.createOscillator(), g=AC.createGain();
+  o.type="square"; o.frequency.setValueAtTime(f,t0);
+  g.gain.setValueAtTime(vol,t0); g.gain.exponentialRampToValueAtTime(0.001,t0+dur);
+  o.connect(g).connect(AC.destination); o.start(t0); o.stop(t0+dur+0.02);
+}
+const SND={
+  tab:[[988,.06],[1319,.09]],
+  row:[[1175,.05]],
+  zone:[[784,.05],[1047,.05],[1568,.09]],
+  go:[[523,.05],[659,.05],[784,.05],[1047,.12]],
+  clr:[[784,.05],[523,.05],[392,.1]],
+  off:[[659,.05],[440,.07]],
+  err:[[220,.12],[196,.18]]
+};
+function snd(k){
+  if(muted) return;
+  try{
+    AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+    if(AC.state==="suspended") AC.resume();
+    let t=AC.currentTime+0.01;
+    SND[k].forEach(([f,d])=>{ tone(f,t,d,0.12); t+=d*0.9; });
+  }catch(e){}
+}
+let cur="ems", zone=-1, hlRow=-1;
+const $=id=>document.getElementById(id);
+const yen=n=>n.toLocaleString()+"円";
+
+function render(){
+  const d=DATA[cur];
+  $("unit").textContent="g";
+  $("wt").placeholder="重さ";
+  $("thead").innerHTML="<tr><th>重さ</th>"+ZONES.map((z,i)=>'<th data-z="'+i+'" class="zb '+(zone===i?"colsel":"")+'"><span>'+z.replace(" ","<br>")+"</span></th>").join("")+"</tr>";
+  $("tbody").innerHTML=d.rows.map((r,ri)=>'<tr data-i="'+ri+'" class="'+(ri===hlRow?"hl":"")+'"><td>'+d.label(r[0])+"</td>"+
+    r.slice(1).map((v,i)=>'<td class="'+(d.red.includes(i)?"r ":"")+(zone===i?"colsel":"")+'">'+v.toLocaleString()+"</td>").join("")+"</tr>").join("");
+  $("note").innerHTML=NOTES[cur];
+}
+let lastLabel="";
+const ZFULL=["中国・韓国・台湾","アジア（中国・韓国・台湾を除く）","オセアニア・カナダ・メキシコ・中近東・ヨーロッパ","米国（グアム等海外領土含む）","中南米（メキシコを除く）・アフリカ"];
+function showResult(ri,inputLabel){
+  lastLabel=inputLabel;
+  const d=DATA[cur], r=d.rows[ri];
+  $("result").style.display="block";
+  $("result").innerHTML='<div class="w">'+inputLabel+' → <b>'+d.label(r[0])+'まで</b> の料金</div>'+
+    (zone>=0?'<div class="zsel"><span class="zn2">第'+(zone+1)+'地帯</span><big>'+r[zone+1].toLocaleString()+'<small>円</small></big><span class="zd">'+ZFULL[zone]+'</span></div>'
+            :'<div class="hint">▼ 表の「第1〜第5」をタップすると料金が表示されます</div>');
+}
+function setHdr(){document.documentElement.style.setProperty("--hdr",document.querySelector("header").offsetHeight+"px");}
+function scrollToRow(ri){
+  setHdr();
+  const tr=document.querySelector('tr[data-i="'+ri+'"]'); if(!tr) return;
+  const hdr=document.querySelector("header").offsetHeight, th=document.querySelector("th").offsetHeight;
+  const y=tr.getBoundingClientRect().top+window.scrollY-hdr-th-tr.offsetHeight*2;
+  window.scrollTo({top:Math.max(0,y),behavior:"smooth"});
+}
+new ResizeObserver(setHdr).observe(document.querySelector("header"));
+function search(quiet){
+  let raw=$("wt").value.replace(/[,，\s]/g,"").replace(/[０-９．]/g,c=>String.fromCharCode(c.charCodeAt(0)-0xFEE0));
+  let g=/^[0-9.]*$/.test(raw)?parseFloat(raw):parseVoice(raw);
+  if(g>0 && String(g)!==raw){ $("wt").value=g; }
+  kbVoiceOff();
+  const d=DATA[cur];
+  if(!(g>0)){ $("result").style.display="none"; hlRow=-1; render(); return; }
+  const v=d.unit==="kg"?g/1000:g, gl=g.toLocaleString()+"g";
+  const ri=d.rows.findIndex(r=>r[0]>=v);
+  if(ri<0){
+    hlRow=-1; render();
+    $("result").style.display="block";
+    if(!quiet) snd("err");
+    $("result").innerHTML='<div class="msg">'+gl+' は表の範囲外です（最大 '+d.label(d.rows[d.rows.length-1][0])+'）</div>';
+    return;
+  }
+  hlRow=ri; render(); showResult(ri, gl); if(!quiet) snd("go");
+  const tr=document.querySelector('tr[data-i="'+ri+'"]');
+  scrollToRow(ri);
+  $("wt").blur();
+}
+$("seg").addEventListener("click",e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  cur=b.dataset.k;
+  document.body.className="m-"+cur;
+  $("ico").textContent={ems:"⚡",air:"✈️",sea:"🚢"}[cur];
+  document.querySelector('meta[name=theme-color]').content=getComputedStyle(document.body).getPropertyValue("--navy").trim();
+  document.querySelectorAll("#seg button").forEach(x=>x.classList.toggle("on",x===b));
+  hlRow=-1; snd("tab");
+  if($("wt").value.trim()){ search(true); } else { zone=-1; $("result").style.display="none"; render(); window.scrollTo({top:0}); }
+});
+$("thead").addEventListener("click",e=>{
+  const th=e.target.closest("th[data-z]"); if(!th) return;
+  const z=+th.dataset.z; zone=(zone===z)?-1:z; render(); snd(zone<0?"off":"zone");
+  if(hlRow>=0) showResult(hlRow,lastLabel);
+});
+$("tbody").addEventListener("click",e=>{
+  const tr=e.target.closest("tr"); if(!tr) return;
+  const ri=+tr.dataset.i;
+  if(hlRow===ri){ hlRow=-1; $("wt").value=""; $("result").style.display="none"; render(); snd("off"); return; }
+  const d=DATA[cur], w=d.rows[ri][0], g=d.unit==="kg"?w*1000:w;
+  hlRow=ri; $("wt").value=g; render(); showResult(ri, g.toLocaleString()+"g"); snd("row");
+});
+$("go").addEventListener("click",()=>search());
+// ---- 音声入力 ----
+function jnum(t){ // 漢数字→数値
+  const D={"〇":0,"零":0,"一":1,"二":2,"三":3,"四":4,"五":5,"六":6,"七":7,"八":8,"九":9};
+  const U={"十":10,"百":100,"千":1000};
+  let tot=0,sec=0,n=0,has=false;
+  for(const c of t){
+    if(c in D){n=D[c];has=true;}
+    else if(c in U){sec+=(n||1)*U[c];n=0;has=true;}
+    else if(c==="万"){tot+=(sec+n||1)*10000;sec=0;n=0;has=true;}
+  }
+  return has?tot+sec+n:NaN;
+}
+function toNum(t){
+  if(!t) return NaN;
+  t=t.replace(/[０-９．]/g,c=>String.fromCharCode(c.charCodeAt(0)-0xFEE0)).replace(/[,，、\s]/g,"");
+  if(/^[0-9.]+$/.test(t)) return parseFloat(t);
+  if(/^[0-9]+[万千百]/.test(t)) t=t.replace(/[0-9]+/g,d=>[..."〇一二三四五六七八九"][0]&&d.split("").map(x=>"〇一二三四五六七八九"[x]).join(""));
+  return jnum(t);
+}
+function parseVoice(raw){
+  let t=raw.replace(/[０-９．]/g,c=>String.fromCharCode(c.charCodeAt(0)-0xFEE0)).replace(/[,，、。\s]/g,"")
+    .replace(/キログラム|キロ|kg|KG|㎏/g,"K").replace(/グラム|g|G|ｇ/g,"G").replace(/てん|点/g,".");
+  let m=t.match(/^([0-9.〇零一二三四五六七八九十百千万]+)K(半)?([0-9〇零一二三四五六七八九十百千万]+)?G?$/);
+  if(m){ let g=toNum(m[1])*1000; if(m[2]) g+=500; if(m[3]) g+=toNum(m[3]); return Math.round(g); }
+  m=t.match(/^([0-9.〇零一二三四五六七八九十百千万]+)G?$/);
+  if(m) return Math.round(toNum(m[1]));
+  m=t.match(/([0-9.]+)/); return m?Math.round(parseFloat(m[1])):NaN;
+}
+function vmsg(t){ $("vmsg").textContent=t||""; $("vrow").classList.toggle("show",!!t); }
+function setAudioSession(type){ try{ if(navigator.audioSession) navigator.audioSession.type=type; }catch(e){} }
+setAudioSession("ambient");  // 効果音はほかのアプリの音を小さくしない
+let kbVoice=false, kbTimer=null;
+function kbVoiceOn(){
+  kbVoice=true; $("mic").classList.add("on");
+  const w=$("wt"); w.blur();
+  w.setAttribute("inputmode","text"); w.removeAttribute("pattern");
+  w.value=""; w.placeholder="例：2キロ300";
+  vmsg("⌨️ キーボードのマイクを押して「2キロ300」のように話してください");
+  w.focus();
+}
+function kbVoiceOff(){
+  if(!kbVoice) return;
+  kbVoice=false; clearTimeout(kbTimer); $("mic").classList.remove("on");
+  const w=$("wt"); w.setAttribute("inputmode","numeric"); w.setAttribute("pattern","[0-9]*"); w.placeholder="重さ";
+}
+$("wt").addEventListener("input",()=>{
+  if(!kbVoice) return;
+  clearTimeout(kbTimer);
+  kbTimer=setTimeout(()=>{
+    const t=$("wt").value; const g=parseVoice(t);
+    if(g>0){ vmsg("⌨️ 「"+t+"」→ "+g.toLocaleString()+"g"); $("wt").blur(); search(); }
+  },1300);
+});
+$("mic").addEventListener("click",()=>{
+  if(kbVoice){ kbVoiceOff(); $("wt").blur(); vmsg(""); snd("off"); return; }
+  snd("tab"); kbVoiceOn();
+});
+$("mute").textContent=muted?"🔇":"🔊";
+$("mute").addEventListener("click",()=>{
+  muted=!muted; $("mute").textContent=muted?"🔇":"🔊";
+  try{ localStorage.setItem("intl_mute",muted?"1":"0"); }catch(e){}
+  if(!muted) snd("row");
+});
+$("clr").addEventListener("click",()=>{
+  snd("clr"); vmsg(""); kbVoiceOff();
+  $("wt").value=""; hlRow=-1; zone=-1; $("result").style.display="none"; render();
+  window.scrollTo({top:0,behavior:"smooth"}); $("wt").focus();
+});
+$("wt").addEventListener("keydown",e=>{ if(e.key==="Enter") search(); });
+render();
+
+// =============================================================
+// Claude Code のキャラクター（ヘッダー左上）
+//   右へ歩く → 端で立ち止まって手足をちょこちょこ動かし、振り向く → 左へ戻る … を繰り返す
+// =============================================================
+(function ccMascot() {
+  const svg = document.querySelector('.cc-mascot svg');
+  if (!svg) return;
+  const body = svg.querySelector('.cc-hop');
+  const armL = svg.querySelector('.cc-arm-l');
+  const armR = svg.querySelector('.cc-arm-r');
+  const legs = Array.from(svg.querySelectorAll('.cc-leg')); // 左から順に4本
+
+  const HALF = 12;        // 真ん中から左右それぞれに歩く幅（px）
+  const STEP = 2;         // 1歩で進む距離（px）
+  const TICK = 220;       // 1コマの長さ（ミリ秒）
+  const IDLE_TICKS = 9;   // 端で立ち止まるコマ数
+
+  let x = -HALF, dir = 1, mode = 'idle', t = 0;
+
+  const legUp = (i, up) => legs[i].setAttribute('height', up ? 1 : 2);
+  const armUp = (el, up) => el.setAttribute('y', up ? 1 : 2);
+  const bob = up => body.setAttribute('transform', up ? 'translate(0,-1)' : '');
+  const rest = () => { legs.forEach((_, i) => legUp(i, false)); armUp(armL, false); armUp(armR, false); bob(false); };
+  const draw = () => { svg.style.transform = `translateX(${x}px) scaleX(${dir})`; };
+
+  function tick() {
+    t++;
+    if (mode === 'walk') {
+      const ph = t % 2;
+      armUp(armL, false); armUp(armR, false);
+      legUp(0, ph === 0); legUp(2, ph === 0);
+      legUp(1, ph === 1); legUp(3, ph === 1);
+      bob(ph === 0);
+      x += STEP * dir;
+      if (x <= -HALF || x >= HALF) {
+        x = Math.max(-HALF, Math.min(HALF, x));
+        mode = 'idle'; t = 0; rest();
+      }
+    } else {
+      const ph = t % 4;
+      armUp(armL, ph === 1);
+      armUp(armR, ph === 3);
+      legUp(0, ph === 2);
+      legUp(3, ph === 0);
+      bob(false);
+      if (t === Math.floor(IDLE_TICKS / 2)) dir = (x >= HALF) ? -1 : 1;
+      if (t >= IDLE_TICKS) { mode = 'walk'; t = 0; rest(); }
+    }
+    draw();
+  }
+
+  draw();
+  setInterval(tick, TICK);
+})();
+
+// ホーム画面アイコン：アイコン画像（ICON_SRC）の左上に Claude Code のキャラクターを描き足す
+// ※ アイコン画像はあとで ICON_SRC に入れる。空のあいだは仮のアイコンを描く
+const ICON_SRC = "";
+(function ccIcon() {
+  const appleIcon = document.getElementById('appleIcon');
+  const favIcon = document.getElementById('favIcon');
+  const S = 180;
+  function finish(ctx, canvas) {
+    var p=3, ox=20, oy=20;   // 1ドットの大きさと左上の位置（180pxアイコンの場合）
+    var px=function(x,y,w,h,col){ctx.fillStyle=col;ctx.fillRect(ox+x*p,oy+y*p,w*p,h*p);};
+    var o='#d97757';
+    px(2,0,8,6,o); px(0,2,2,2,o); px(10,2,2,2,o);
+    px(2,6,1,2,o); px(4,6,1,2,o); px(7,6,1,2,o); px(9,6,1,2,o);
+    px(3,1,1,1,'#1a1612'); px(8,1,1,1,'#1a1612');
+    const url = canvas.toDataURL('image/png');
+    appleIcon.href = url; favIcon.href = url;
+  }
+  const canvas = document.createElement('canvas');
+  canvas.width = S; canvas.height = S;
+  const ctx = canvas.getContext('2d');
+  if (ICON_SRC) {
+    const img = new Image();
+    img.onload = function() { ctx.drawImage(img, 0, 0, S, S); finish(ctx, canvas); };
+    img.src = ICON_SRC;
+  } else {
+    // 仮のアイコン：白地にオレンジで「国際小包」
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, S, S);
+    ctx.fillStyle = '#e8743b'; ctx.fillRect(0, 118, S, 62);
+    ctx.fillStyle = '#d9652b'; ctx.textAlign = 'center';
+    ctx.font = 'bold 40px "Hiragino Sans","Noto Sans JP",sans-serif';
+    ctx.fillText('国際', 112, 70);
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 34px "Hiragino Sans","Noto Sans JP",sans-serif';
+    ctx.fillText('小包料金', 90, 162);
+    finish(ctx, canvas);
+  }
+})();
+</script>
+</body>
+</html>
