@@ -27,9 +27,9 @@ td:first-child{background:var(--tint)}
 body{margin:0;font-family:-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;background:var(--bg);color:var(--text);
   padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
 header{position:sticky;top:0;z-index:10;background:var(--bg);padding:12px 12px 8px;border-bottom:1px solid var(--line)}
-h1{margin:0 0 10px;font-size:18px;color:var(--navy);display:flex;align-items:center;gap:6px}
+h1{margin:0 0 10px;font-size:21px;color:var(--navy);display:flex;align-items:center;gap:6px}
 h1 small{font-size:11px;color:var(--sub);font-weight:normal;margin-left:auto}
-.mute{border:1px solid var(--line);background:#fff;border-radius:8px;font-size:16px;padding:2px 6px;line-height:1.2}
+.mute{margin-left:auto;border:1px solid var(--line);background:#fff;border-radius:8px;font-size:16px;padding:2px 6px;line-height:1.2}
 .seg{display:flex;background:var(--chip);border-radius:10px;padding:3px;gap:3px}
 .seg button{flex:1;border:0;background:transparent;padding:9px 0;border-radius:8px;font-size:15px;font-weight:700;color:var(--sub)}
 .seg button.on{background:var(--card);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.15)}
@@ -120,8 +120,8 @@ th:last-child,td:last-child{border-right:0}
 .cc-mascot { height: 46px; justify-content: flex-end; padding-top: 0; gap: 3px; }
 /* タイトルは1行に。幅が狭いスマホでは少し詰める */
 h1 .ttl, h1 small { white-space: nowrap; }
-@media (max-width: 400px) { h1 { font-size: 16px; gap: 4px; } .gh-wrap { width: 44px; margin-right: 0; margin-left: 0; justify-content: flex-start; padding-left: 12.5px; } .cc-wrap { width: 57px; padding-left: 4px; justify-content: flex-start; } }
-@media (max-width: 370px) { h1 { font-size: 15px; } h1 small { font-size: 10px; } }
+@media (max-width: 400px) { h1 { font-size: 20px; gap: 4px; } .gh-wrap { width: 44px; margin-right: 0; margin-left: 0; justify-content: flex-start; padding-left: 12.5px; } .cc-wrap { width: 57px; padding-left: 4px; justify-content: flex-start; } }
+@media (max-width: 370px) { h1 { font-size: 19px; } }
 @keyframes gh-tilt { 0%,60%,100% { transform: rotate(0); } 68% { transform: rotate(-9deg); } 78% { transform: rotate(-9deg); } 86% { transform: rotate(6deg); } 92% { transform: rotate(0); } }
 @keyframes gh-wag { from { transform: rotate(-14deg); } to { transform: rotate(12deg); } }
 @keyframes gh-wink { 0%,88%,100% { transform: scaleY(0); } 90%,95% { transform: scaleY(1); } }
@@ -235,7 +235,7 @@ h1 .ttl, h1 small { white-space: nowrap; }
       </svg>
       <span class="gh-label">GitHub</span>
     </a>
-  </div><span id="ico">⚡</span><span class="ttl">国際小包料金表</span><small>日本郵便</small><button id="mute" class="mute" aria-label="音">🔊</button></h1>
+  </div><span id="ico">⚡</span><span class="ttl">国際小包料金表</span><button id="mute" class="mute" aria-label="音">🔊</button></h1>
   <div class="seg" id="seg">
     <button data-k="ems" class="on">EMS</button>
     <button data-k="air">航空便</button>
