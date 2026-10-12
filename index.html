@@ -128,10 +128,9 @@ h1 .ttl, h1 small { white-space: nowrap; }
 @keyframes gh-spin { 0% { transform: rotate(0) scale(1); } 50% { transform: rotate(180deg) scale(1.15); } 100% { transform: rotate(360deg) scale(1); } }
 
 /* === オープニング（開いたときに出る画面。ゆうパック運賃 近畿発と同じ作り）
-   ホーム画面アイコンと同じ「エアメールの封筒」：クリーム色の紙のまわりに赤・白・紺の斜めのしま */
-.op{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:calc(30px + env(safe-area-inset-top)) 32px calc(30px + env(safe-area-inset-bottom));
-  background:repeating-linear-gradient(-45deg,#d6322f 0 10px,#fff 10px 20px,#1f3a8a 20px 30px,#fff 30px 40px);color:#243e62;cursor:pointer;transition:opacity .5s,visibility .5s;overflow:auto}
-.op::before{content:"";position:fixed;inset:14px;background:#fffaf0;border-radius:4px;box-shadow:0 0 0 1px rgba(0,0,0,.06)}   /* しまの内側のクリーム色の紙 */
+   クリーム色の紙に、アイコンと同じ紺の文字（まわりの斜めじまは付けない） */
+.op{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:calc(16px + env(safe-area-inset-top)) 20px calc(16px + env(safe-area-inset-bottom));
+  background:#fffaf0;color:#243e62;cursor:pointer;transition:opacity .5s,visibility .5s;overflow:auto}
 .op.hide{opacity:0;visibility:hidden}
 .op-in{position:relative;width:100%;max-width:340px;display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center}
 .op-sub{margin:0;font-size:.85rem;font-weight:700;background:#243e62;color:#fff;border-radius:999px;padding:3px 14px;animation:op-drop .5s both}
