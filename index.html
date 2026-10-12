@@ -47,7 +47,8 @@ input[type=number]{-moz-appearance:textfield}
 .calc{display:flex;gap:6px;margin-top:10px;align-items:center;flex-wrap:nowrap}
 .inwrap{position:relative;flex:1;min-width:0}
 .calc input{width:100%;min-width:0;font-size:17px;padding:9px 26px 9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--text)}
-.calc .unit{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--sub);pointer-events:none}
+.calc input::placeholder{color:#000;opacity:1}  /* 「重さ」の文字は黒 */
+.calc .unit{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:14px;color:#000;pointer-events:none}
 .calc button{flex:0 0 auto;border:0;background:var(--navy);color:#fff;padding:10px 11px;border-radius:8px;font-size:14px;font-weight:700;white-space:nowrap;height:42px}
 .calc button.mic{width:42px;padding:0;display:flex;align-items:center;justify-content:center;background:#fff;color:var(--navy);border:1.5px solid var(--navy)}
 .calc button.mic.on{background:var(--navy);color:#fff}
@@ -95,7 +96,7 @@ th:last-child,td:last-child{border-right:0}
 .legend div{padding:4px 0;border-top:1px dashed var(--line)}
 .legend i{font-style:normal;display:inline-block;background:var(--navy);color:#fff;border-radius:4px;padding:1px 6px;margin-right:8px;font-size:11px}
 /* === Claude Code のキャラクター（ヘッダー左上） === */
-.cc-wrap { width: 62px; height: 40px; flex-shrink: 0; display: flex; justify-content: center; margin-left: 2px; }  /* 郵便料金計算と同じく左端から少し離す */
+.cc-wrap { width: 62px; height: 40px; flex-shrink: 0; display: flex; justify-content: center; margin-left: 12px; }  /* 郵便料金計算と同じく左端から少し離す */
 .cc-mascot { display: flex; flex-direction: column; align-items: center; gap: 3px; text-decoration: none; padding-top: 4px; }
 .cc-mascot svg { width: 51px; height: 34.5px; shape-rendering: crispEdges; overflow: visible; }  /* 右の約15pxはノートパソコンが出る場所。中の絵は ccTyping が描く */
 .cc-mascot .cc-label { font-family: -apple-system, "Segoe UI", sans-serif; font-size: 7px; letter-spacing: 0.05em; color: #d97757; opacity: 0.8; white-space: nowrap; font-weight: normal; }
@@ -119,7 +120,7 @@ th:last-child,td:last-child{border-right:0}
 .cc-mascot { height: 46px; justify-content: flex-end; padding-top: 0; gap: 3px; }
 /* タイトルは1行に。幅が狭いスマホでは少し詰める */
 h1 .ttl, h1 small { white-space: nowrap; }
-@media (max-width: 400px) { h1 { font-size: 16px; gap: 4px; } .gh-wrap { width: 44px; margin-right: 0; } .cc-wrap { width: 54px; justify-content: flex-start; } }
+@media (max-width: 400px) { h1 { font-size: 16px; gap: 4px; } .gh-wrap { width: 44px; margin-right: 0; } .cc-wrap { width: 57px; padding-left: 4px; justify-content: flex-start; } }
 @media (max-width: 370px) { h1 { font-size: 15px; } h1 small { font-size: 10px; } }
 @keyframes gh-tilt { 0%,60%,100% { transform: rotate(0); } 68% { transform: rotate(-9deg); } 78% { transform: rotate(-9deg); } 86% { transform: rotate(6deg); } 92% { transform: rotate(0); } }
 @keyframes gh-wag { from { transform: rotate(-14deg); } to { transform: rotate(12deg); } }
